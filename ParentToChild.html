@@ -1,0 +1,15 @@
+1.In Parent .ts file
+
+public username="Sanjay";
+
+2.In Parent .html file
+
+<app-login [parentData]="username"  ></app-login> 
+
+3. In child .ts file and for this we have to import Input from @angular\core
+
+ @Input('parentData') public userName;
+
+4. In Child .html file
+
+ <div class="text-success text-center">{{userName}}</div>
