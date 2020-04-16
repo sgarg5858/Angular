@@ -1,0 +1,14 @@
+.ts
+
+courses : any[] =[
+    {id:1 ,name:"Angular"},
+    {id:2 ,name:"Spring Boot"},
+    {id:3 ,name:"MongoDB"}
+];
+
+
+.html
+
+ <div *ngFor="let course of courses; let i=index">
+       <p>  {{i}}-{{course.name}} </p>
+ </div>
