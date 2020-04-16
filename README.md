@@ -130,3 +130,23 @@ https://github.com/sgarg5858/Angular/blob/master/ngSwitch.html
 
 https://github.com/sgarg5858/Angular/blob/master/ngFor.html
  
+*******************************************************************************************************************************
+# Component Interaction
+
+1. When we load one component into another then we are doing Nested Components. Th component in which we are loading the component
+
+is called Parent and other one is called Child.
+
+2. Child can accept data from Parent using @input decorator and send data to Parent using @Output Decorator
+
+1. First let's send data from Parent o Child and we will render it to template using Interpolation.
+
+https://github.com/sgarg5858/Angular/blob/master/ParentToChild.html
+
+2. Now we will send data from child to Parent and let's render it to template.
+
+  a). In child Template we do not have Parent Selector unlike in Parent template we have Child Selector.
+  
+  b) So the way we send data to Parent from child is through events.
+  
+https://github.com/sgarg5858/Angular/blob/master/ParentToChild.html  
