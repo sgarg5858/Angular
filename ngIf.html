@@ -28,3 +28,15 @@ ngIf with ngTemplate
   </ng-template>
   <button type="button" (click)="submitted=false">Back</button>
 </div>
+
+
+public hasAccount=true or false;
+
+ <div *ngIf="hasAccount ; then login; else register"> </div>
+                <ng-template #login>
+                    <p>Login</p>
+                </ng-template>
+
+                <ng-template #register>
+                    <p>Register>
+                </ng-template>
