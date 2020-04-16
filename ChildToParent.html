@@ -1,0 +1,26 @@
+1. Define EventEmitter()  in Child.ts
+
+@Output() public childEvent= new EventEmitter();
+
+2. Now we have to make button or something which cause this event to emit.
+
+    a)   In child.html
+
+       <button class="btn btn-block btn-sm btn-outline-primary" (click)="fireEvent()">Fire</button>
+
+    b) in child.ts    
+
+    fireEvent() { this.childEvent.emit("Welcome"); }
+
+3. Parent.html
+
+        <app-login (childEvent)="message=$event" [parentData]="username"></app-login> 
+        
+4. Define message Varaible in Parent.ts
+
+       public message="";
+
+5. Now we can make use of message In Template of Parent.       
+
+
+   
