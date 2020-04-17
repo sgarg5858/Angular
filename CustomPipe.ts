@@ -19,3 +19,10 @@ export class SalutationPipe implements PipeTransform {
   }
 
 }
+
+Define variables in .ts file
+
+.html file
+
+ <h2>{{name|salutation:'M'}}</h2>
+ <h2>{{friend|salutation:'F'}}</h2>
