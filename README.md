@@ -150,3 +150,26 @@ https://github.com/sgarg5858/Angular/blob/master/ParentToChild.html
   b) So the way we send data to Parent from child is through events.
   
 https://github.com/sgarg5858/Angular/blob/master/ParentToChild.html  
+
+**********************************************************************************************************************************
+# Service Dependency-Injection
+
+1. Define Service Class    ng generate service 
+
+2. Register It with Injecter register it with app.module.ts so that any component with in module can use it. in (providers)
+
+3. Define Dependency and we know dependency is define in Constructor. and assign values in ngOnInit()
+
+  a)ngOnInit() gets called when component is loaded.
+
+4. @Injectable at Service class in necessary when service class also has dependency from another class.
+
+**************************************************************************************************************************************
+# Http and Observables
+
+1. Observables->A sequence of items that arrive asyncronously over time.
+
+2. import {HttpClientModule} from '@angular/common/http'; in app.module.ts; and add in imports!
+
+https://github.com/sgarg5858/Angular/blob/master/service.ts
+
