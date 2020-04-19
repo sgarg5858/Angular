@@ -1,7 +1,47 @@
 # Angular
+*************************************************************************************************************************
+# Starting Angular App
+
+ng new projectName
+
+Adding bootStrap to project
+
+npm install --save bootstrap@4
+
+In angular.json  in styles add
+
+node_modules\bootstrap\dist\css\bootstrap.min.css
+
+1. When Angular app starts the first file which is executed is main.ts.
+
+2. In main.ts file we have this line.
+
+   a). platformBrowserDynamic().bootstrapModule(AppModule)
+    
+3. This refers to AppModule and if we look at AppModule.we have
+
+     a). bootstrap: [AppComponent]
+      
+     b). It tells angular to look at App Component ! and remember the selectors of all components present in bootstrap as we might need
+      
+      these selecters when we load index.html selectors are in.ts file.
+
+
 
 **************************************************************************************************************************
 # Components:
+
+Angular uses components to build web pages and modules to bundle different pieces.
+
+AppModule basically gives Angular gives the information which features my app should have and use!
+
+AppModule has @NgModule Decorator  and bootstrap,providers,declarations and imports!
+  
+  a) bootstrap  tells angular of which components should it be aware of when whole application starts! meaning when we load index.html!
+  
+  b) Declaration contains all the components in this module !
+
+a) ng generate component componentName
 
 1. We can use compnents as custom tags!
 
@@ -16,7 +56,9 @@ selector: '.app-root'
 Both will work same!
 
 ***************************************************************************************************************************
-# Interpolation:
+# String Interpolation:
+
+String Interpolation has to return string in the end!
 
 Suppose there is variable in .ts file and method which return string or number to render these things on html we can use Interpolation.
 
@@ -96,8 +138,28 @@ Event Binding is helpful in capturing events !
  
   <button (click)="onSubmit(userName.value,passWord.value)"></button>
   
+# (input)
+ 
+ Offered by <input> if we want to execute something when user types anything is this field
+ 
+  (input)="onUpdateServerName($event)"
+  
+  here using $event we can access to data related to event occoured. 
+ 
+# (click)  
+ 
+ offered by <button> if we want to execute something on clicking the button
+  
 ****************************************************************************************************************************
 # Two Way Binding:
+
+For two way binding to work, we need to enable the ngModel directive work!
+
+This is done by adding FormsModule to imports[] in app.modulte.ts .
+
+[(ngModel)] isequivalent to (input) + interpolation
+
+(input) reflects every change interpolation gets the values.
 
 When we are working with forms it is essential that both are template and components are in sync,Otherwise data might not be consistent.
 
@@ -107,8 +169,19 @@ When we are working with forms it is essential that both are template and compon
  
  and we have to import FormsModule in app.module.ts and also in declarations !
  
+ **************************************************************************************************************************
+ Data Binding Accross Components:
+ 
+ By default properties in angular are only bindable in same component.
+ 
+ If we want to bind to some property which is present in child component.ts to parent.html then
+ 
+ Add @Input() decorator infront of property in child and use general binding in parent it will bind!
+ 
  *****************************************************************************************************************************
 # Structural Directives:
+
+Directives are instructions in the DOM.
 
 1.   ngIf      2.  ngSwitch  3. ngFor
 
@@ -129,6 +202,8 @@ https://github.com/sgarg5858/Angular/blob/master/ngSwitch.html
 3. ngFor:
 
 https://github.com/sgarg5858/Angular/blob/master/ngFor.html
+
+4. ngStyle:
  
 *******************************************************************************************************************************
 # Component Interaction
@@ -172,4 +247,6 @@ https://github.com/sgarg5858/Angular/blob/master/ParentToChild.html
 2. import {HttpClientModule} from '@angular/common/http'; in app.module.ts; and add in imports!
 
 https://github.com/sgarg5858/Angular/blob/master/service.ts
+
+***************************************************************************************************************************************
 
