@@ -1,0 +1,36 @@
+Using # we can specify template variable.  
+
+it will hold the refernce to whole html element to access the value entered in typescipt file  pass value from template
+
+and use var.value to access entered value use two way binding!
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div style="color:royalblue;">Add new Servers or blueprints!</div>
+
+      <form >
+        <div class="form-group">
+          <label for="name">Server Name:</label>
+          <input 
+          type="text" 
+          id="name" 
+          class="form-control"
+           #serverNameInput>
+
+          <!-- <input type="text" id="name" class="form-control" name="newServerName" [(ngModel)]="newServerName"> -->
+        </div>
+        <div class="form-group">
+          <label for="content">Server Content:</label>
+          <input 
+          type="text" 
+          id="content" 
+          class="form-control" 
+          #serverContentInput >
+          <!-- <input type="text" id="content" class="form-control" name="newServerContent" [(ngModel)]="newServerContent"> -->
+        </div>
+        <button (click)="onAddServer(serverNameInput)" class="btn   btn-success" style="width: 200px;">Add Server</button>
+        <button (click)="onAddBlueprint()" class="btn  btn-primary" style="width: 200px;">Add Server Blueprint</button>
+      </form>
+      
+    </div>
+  </div>
