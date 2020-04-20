@@ -1,0 +1,24 @@
+First Define local template variable in template on input element now
+
+we want to use @ViewChild to get the value in .ts file
+
+1.
+
+ <div class="form-group">
+          <label for="content">Server Content:</label>
+          <input 
+          type="text" 
+          id="content" 
+          class="form-control" 
+          #serverContentInput >
+
+
+2.
+
+@ViewChild('serverContentInput',{static:true}) serverContentInput:ElementRef;     type of ElementRef
+
+To get The Value of input element
+
+3.
+
+ console.log(this.serverContentInput.nativeElement.value);
