@@ -169,6 +169,26 @@ When we are working with forms it is essential that both are template and compon
  
  and we have to import FormsModule in app.module.ts and also in declarations !
  
+ # Local Template Reference Variables:
+ 
+ We can also local template reference vraibles to send data to typescipt file using button 
+ 
+ # ng-Content  
+ 
+ By default any data in your custom component tag will be lost.
+ 
+ But if want display data which is in b/w opening and closing tag of custom component then in the template of custom component
+ 
+ we have to specify 
+ 
+ <ng-content></ng-content>
+ 
+ # @ViewChild()
+ 
+ # @ContentChild()
+ 
+ 
+ 
  **************************************************************************************************************************
  Data Binding Accross Components:
  
@@ -177,6 +197,33 @@ When we are working with forms it is essential that both are template and compon
  If we want to bind to some property which is present in child component.ts to parent.html then
  
  Add @Input() decorator infront of property in child and use general binding in parent it will bind!
+ 
+ *****************************************************************************************************************************
+ # Component-Lifecycle
+ 
+ # ngOnInit
+ 
+   It is a life cycle hook.When angular instantaites the component it goes through different phases of creation.
+   
+   It will actually give us some chance to hook into these phases and execute some code.
+   
+   We can hook into these phases by implementing some methods if they are present
+   
+1. ngOnChanges -> Called after bound input property value changes.
+
+2. ngOnInit  -> Called once the component is intialized.ngOnInit will run after the constructor.
+
+3.ngDoCheck -> Called during every change detection run. Change Detection runs by which angular knows if there is any chnge happened.
+
+Change Detection runs even if we press button.
+
+4. ngAfterViewInit ->Called after component View and Child's view has been initialized.
+
+5. ngOnDestroy: Called after once the component is about to be destroyed. suppose you but ngIf ='false' on component and it will call
+
+this method.
+   
+ 
  
  *****************************************************************************************************************************
 # Structural Directives:
@@ -225,6 +272,7 @@ https://github.com/sgarg5858/Angular/blob/master/ParentToChild.html
   b) So the way we send data to Parent from child is through events.
   
 https://github.com/sgarg5858/Angular/blob/master/ParentToChild.html  
+
 
 **********************************************************************************************************************************
 # Service Dependency-Injection
