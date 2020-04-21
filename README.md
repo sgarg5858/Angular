@@ -312,7 +312,9 @@ https://github.com/sgarg5858/Angular/blob/master/ParentToChild.html
 
 
 **********************************************************************************************************************************
-# Service Dependency-Injection
+# Service Dependency-Injection Hierarchical Injector
+
+# We can have different instances of services if we define services in providers of every component.
 
 1. Define Service Class    ng generate service 
 
@@ -322,7 +324,13 @@ https://github.com/sgarg5858/Angular/blob/master/ParentToChild.html
 
   a)ngOnInit() gets called when component is loaded.
 
-4. @Injectable at Service class in necessary when service class also has dependency from another class.
+# Injecting Services into Services: 
+
+   1. @Injectable at Service class in necessary when service class also has dependency from another class.
+   
+# Cross Component Communication Using Services:
+
+https://github.com/sgarg5858/Angular/blob/master/CrossComunicationUsingServices.ts
 
 **************************************************************************************************************************************
 # Http and Observables
