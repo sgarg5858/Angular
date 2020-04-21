@@ -1,0 +1,45 @@
+we will create unless Directive ! opp of *ngIf
+
+import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+
+@Directive({
+  selector: '[appUnless]'
+})
+export class UnlessDirective {
+  @Input() set appUnless(condition:boolean)
+  {
+    if(!condition)
+    {
+      this.vcRef.createEmbeddedView(this.templateRef);
+    }else
+    {
+      this.vcRef.clear();
+    }
+  }
+  constructor(private templateRef:TemplateRef<any>,private vcRef:ViewContainerRef) { }
+
+}
+
+
+ <div *appUnless=show>
+        <ul class="list-group" >
+          <li class="list-group-item odd" *ngFor="let number of even" >
+           <p > {{number}}</p>
+          </li>
+        </ul>
+      </div>
+      
+      
+ Behind the scenes what star does?
+ 
+ Similar to property Binding!
+ 
+ <ng-template [appUnless]="show">
+ <div >
+        <ul class="list-group" >
+          <li class="list-group-item odd" *ngFor="let number of even" >
+           <p > {{number}}</p>
+          </li>
+        </ul>
+      </div>
+  <ng-template    
