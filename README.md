@@ -225,8 +225,45 @@ this method.
    
  
  
- *****************************************************************************************************************************
+******************************************************************************************************************************
+# Directives:
+******************************************************************************************************************************
+# Attribute Directives:
+
+1. Looks like normal HTML attribute(possibly with data binding or attribute binding)
+
+2. Only affect/change the element they are added to.
+
+@ Check out @Directive ,Renderer
+
+https://github.com/sgarg5858/Angular/blob/master/RenderAndAttributeDirective
+
+3. @HostListener('eventName')
+
+it is used to listening to events happening on the elements.
+
+https://github.com/sgarg5858/Angular/blob/master/HostListener.ts
+
+4. @HostBinding
+
+It is used to set properties of an element.
+
+https://github.com/sgarg5858/Angular/blob/master/HostBinding.ts
+
+https://github.com/sgarg5858/Angular/blob/master/BindingToAttributeProperties.ts
+
+5. Building Structural Directive ! and what does * does behind the scenes...
+
+https://github.com/sgarg5858/Angular/blob/master/buildingStructuralDirective
+
+******************************************************************************************************************************
 # Structural Directives:
+
+Structural Directives change the structure of DOM.
+
+1. Looks like a normal HTML attribute with leading *
+
+2. Affect the whole area in DOM.
 
 Directives are instructions in the DOM.
 
