@@ -342,4 +342,26 @@ https://github.com/sgarg5858/Angular/blob/master/CrossComunicationUsingServices.
 https://github.com/sgarg5858/Angular/blob/master/service.ts
 
 ***************************************************************************************************************************************
+# Routing
 
+1. Routes are responsible for our whole app where to register routes?
+
+2. app.module.ts it is . as this is the place where we configure our app. and accessible by all components!
+
+3.  Add RouterModule in Imports array in app.module.ts
+
+4.  Paths are of two types:
+
+1. relative path:  routerLink="servers"  it will append /servers to the end of curr path   servers/servers
+
+2. absolute path: routerLink="/servers"  it will open only /servers
+
+/ makes path abolute 
+
+and ./ also gives relative path
+
+we can also move around like directory
+
+../servers    => move one level up and then append servers 
+
+https://github.com/sgarg5858/Angular/blob/master/SettingUpRoutinInAngular
