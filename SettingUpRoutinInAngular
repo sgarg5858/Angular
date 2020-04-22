@@ -1,0 +1,181 @@
+app.module.ts
+
+1.
+const appRoutes:Routes=[
+  {path: '', component: HomeComponent},
+  {path: 'users', component: UsersComponent},
+  {path: 'servers', component: ServersComponent}
+]
+
+In Imports Array:
+
+2.
+   RouterModule.forRoot(appRoutes)
+   
+   in html use this instead of component selector
+   
+3. <router-outlet></router-outlet>   
+   
+ 4.For navigation we will use  router-link
+
+  <li role="presentation"><a routerLink="servers">Servers</a></li>
+        <li role="presentation"><a routerLink="users">Users</a></li>
+
+ 5. So we navtabs and we want to dynamically select the tab which is selected on clicking the link
+ 
+ <ul class="nav nav-tabs">
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+          <a class="nav-link " a routerLink="">Home</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="servers">Servers</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="users">Users</a>
+        </li>
+      </ul>
+
+
+6. Suppose on clicking the button you want to do some process and then navigate to another page ?
+  
+  in .html file
+
+<button class="btn btn-primary" (click)="onLoadServers()">Load Servers</button>
+
+in .ts file
+
+ constructor(private router:Router) { }
+
+
+  onLoadServers()
+  {
+    //absolute path
+    this.router.navigate(["/servers"]);
+  }
+
+7. Now let's have a look at how to use relative path's in typescript file.
+
+Unlike navigate method,navigte method doesnot know which route you are currently on.
+
+Router Link always know on which route it is by which component on it sits.
+
+constructor(private serversService: ServersService,
+    private router:Router,
+    private currentRoute:ActivatedRoute
+    ) { }
+
+  onReload()
+  {
+    //by default relativeTo is root domain.
+    this.router.navigate(['../servers'],{relativeTo:this.currentRoute});
+  }
+
+ActivatedRoute simply injects the current route!
+
+8. Passing Parameters to the Route:
+
+in app.module.ts add
+
+: colon tells angular that id and name is dynamic part of the path.
+
+{path: 'user/:id/:name', component: UserComponent},
+  
+In component.ts where do we want to render 
+
+  constructor(private currentRoute:ActivatedRoute) { }
+
+  ngOnInit() {
+    this.user={
+      id:this.currentRoute.snapshot.params['id'] ,
+      name:this.currentRoute.snapshot.params['name']
+    }
+    
+If we are on the same component then reloading the same component won't instantiate the component again.
+    
+and snapshot will not be able to get any changes as it will get new data when ngOnit will start.
+
+It's fine to use snapshot for the first intialization but not for the subsequent changes.we need different approach.
+    
+    
+  ngOnInit() {
+    this.user={
+      id:this.currentRoute.snapshot.params['id'] ,
+      name:this.currentRoute.snapshot.params['name']
+    };
+    //params is an observable here we can subscribe to it as it is an asyncronous call.
+    this.currentRoute.params
+    .subscribe(
+      (params:Params)=> {
+        this.user.id=params['id'],
+        this.user.name=params['name']
+      }
+    )
+  }
+  Above approach is useful when we are on the same page and we need changes !
+    
+  9. Unsubscribing to subsription when component is about to be destroyed.
+  
+  xport class UserComponent implements OnInit,OnDestroy {
+  user: {id: number, name: string};
+  paramsSubscription:Subscription;
+
+  constructor(private currentRoute:ActivatedRoute) { }
+
+  ngOnInit() {
+    this.user={
+      id:this.currentRoute.snapshot.params['id'] ,
+      name:this.currentRoute.snapshot.params['name']
+    };
+    //params is an observable here
+   this.paramsSubscription= this.currentRoute.params
+    .subscribe(
+      (params:Params)=> {
+        this.user.id=params['id'],
+        this.user.name=params['name']
+      }
+    )
+  }
+  ngOnDestroy()
+  {
+    //by default angular will do it for you but t is preffered you do it manually !
+    this.paramsSubscription.unsubscribe();
+  }
+
+  
+10. Passing Query Parameters and Fragments !
+    [queryParams]="{}"  is a bindable property of routerLink it gives ?
+    fragment="" gives #  
+    
+    <a
+        [routerLink]="['/servers', 5, 'edit' ]"
+        [queryParams]="{allowEdit:1}"
+        fragment="loading"
+        href="#"
+        class="list-group-item"
+        *ngFor="let server of servers">
+        {{ server.name }}
+      </a>
+    
+Programmatic.    
+    
+    onLoadServers(id:number)
+  {
+    //absolute path
+    this.router.navigate(["/servers",id,'edit',],{queryParams:{allowEdit:1},fragment:"loading"});
+  }
+    
+11. Now how to retrieve values from route?
+  
+  Like we accessed we params we can use the same way snapshot or subscribe deped=nding upon our needs.
+
+12. QueryParameterHandling:
+
+   this.router.navigate(['edit'],{relativeTo:this.currentRoute,queryParamsHandling:'preserve'})
+    
+13. Redirecting and Wild Cards!
+    
+     {path:'something', component: PageNotFoundComponent},
+  {path:'**', redirectTo: 'something',pathMatch:'full'  }
+    
+    ** should be at last and it says if any of the routes have not matched  then redirect to the provided url.
+    By default angular only matches prefixes . so pathMatch:'full'
