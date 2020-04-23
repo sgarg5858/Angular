@@ -1,0 +1,126 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <form (ngSubmit)="onSubmit(formData)" #formData="ngForm">
+        <!-- <form (ngSubmit)="onSubmit()" #formData="ngForm"> -->
+        <div id="user-data">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input 
+                  type="text"   
+                  id="username" 
+                  class="form-control"
+                  ngModel
+                  name="username"
+                  required
+                  #userName="ngModel"
+                  placeholder="sanju"
+            >
+            <span class="help-block text-muted mt-1" *ngIf="!userName.valid && userName.touched">Please Enter Valid UserName!</span>
+          </div>
+          <button class="btn btn-default" type="button">Suggest an Username</button>
+          <div class="form-group">
+          <label for="gender">Sex:</label>
+            <div class="radio" *ngFor="let gender of genders">
+              <label for="{{gender}}">
+                <input type="radio"
+                name="gender"
+                ngModel
+                [value]="gender"
+                required
+                >
+                {{gender}}
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Mail</label>
+            <input 
+                  type="email" 
+                  id="email" 
+                  class="form-control"
+                  ngModel
+                  name="email"
+                  required
+                  email
+                  #email ="ngModel"
+            >
+            <span class="help-block text-muted" *ngIf="!email.valid && email.touched">Please Enter Valid Email!</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="secret">Secret Questions</label>
+          <select 
+                id="secret" 
+                class="form-control"
+                [(ngModel)]="defaultQuestion"
+                name="secret"
+                >
+            <option value="pet">Your first Pet?</option>
+            <option value="teacher">Your first teacher?</option>
+          </select>
+        </div>
+        <button 
+              class="btn btn-primary" 
+              type="submit" 
+              [disabled]="!formData.valid"
+              >Submit
+        </button>
+      </form>
+      <hr>
+    
+    </div>
+  </div>
+  <div class="row" *ngIf="submitted">
+    <div class="col-xs-12">
+      <h3>Your Data</h3>
+      <p>UserName:{{user.username}}</p>
+      <p>Gender:{{user.gender}}</p>
+      <p>Email:{{user.email}}</p>
+      <p>Secret:{{user.secret}}</p>
+
+
+
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+
+  defaultQuestion= "pet";
+  genders=['male','female'];
+  submitted=false;
+
+  user={
+    username:'',
+    email:'',
+    gender:'',
+    secret:''
+  }
+  suggestUserName() {
+    const suggestedName = 'Superuser';
+  }
+   @ViewChild('formData') formData:NgForm;
+  onSubmit(formData:NgForm)
+  {
+    this.submitted=true;
+    this.user.username=this.formData.value.username;
+    this.user.email=this.formData.value.email;
+    this.user.gender=this.formData.value.gender;
+    this.user.secret=this.formData.value.secret;
+    this.formData.reset();
+  }
+  // onSubmit()
+  // {
+  //   console.log(this.formData);
+  // }
+}
+
+
+    </div>
+  </div>
+</div>
