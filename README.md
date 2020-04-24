@@ -365,3 +365,95 @@ we can also move around like directory
 ../servers    => move one level up and then append servers 
 
 https://github.com/sgarg5858/Angular/blob/master/SettingUpRoutinInAngular
+
+*************************************************************************************************************************************
+# Observables
+
+1. An Observable can be basically thought of as data source.
+
+2. In angular Observable is basically a object we import from a third party Rxjs.
+
+3. Observables are stream of data whenever a new data piece is emitted our subscription will inform about it.
+
+4. In routing params is an observable which will let us know about any changes in the route.
+
+5. Observables don't necessarily stop emitting values just because you are not interested in them anymore.
+
+5. Let's create our own observable.
+
+https://github.com/sgarg5858/Angular/blob/master/observable1.ts
+
+Error in observables make observables die.When observable die because of Error it doesnot mean it will complete.
+
+6. Subject is better than event emitter. but when @Output is used EventEmitter is preffered.
+
+https://github.com/sgarg5858/Angular/blob/master/SubjectOverEventEmitter.ts
+
+*********************************************************************************************************************************
+# Forms
+
+1. Angular provides two approaches for form-handling!
+
+   a) Template Driven Approach!
+   
+   b) Reactive Approach!
+   
+First we will have a look at Template Driven Form
+
+1. Without importing FormsModule  above approaches are not going to work.
+
+2. With this imported it automatically creates JavaScript Object for form element when <form> is detected in template,so we can think of
+   
+   form element as selector for some angular directive,which creates a javascript representation of the form for you.By default angular 
+   
+   is not able to detect your input elements, dropdowns etc.
+   
+   a) Adding simply ngModel like this tells angular that this is control of my form, and we have to specify name
+   
+   For example name="username" ngModel  so that angular can bind the value from input element to some property.for all radio 
+   
+   buttons,dropdowns etc..
+   
+   b) how to submit the form ? by clicking? on submit button> No ! we use (ngSubmit) in form element.
+   
+   (ngSubmit)="onSubmit()" when the submit is clicked ngSubmit is executed and it will trigger onSubmit()
+   
+   c) How to get Data from the form?  we learned local refernces.. use local variable in form tag to get all data of form..
+   
+      e.g #formData="ngForm"  (ngSubmit)="onSubmit(formData)  or 
+      
+      use viewChild('formData') formData:ngForm in .ts file
+      
+   d) Using form Data to decide whether to enable or disable property. like buttons
+   
+    <button  class="btn btn-primary" type="submit" [disabled]="!formData.valid">Submit</button>
+   
+   
+   e) how to give error messages when value filled in input element is invalid
+   
+      provide local reference for input element #userName="ngModel"
+      
+       <span class="help-block text-muted" *ngIf="!userName.valid && userName.touched">Please Enter Valid UserName!</span>
+       
+       then we can use like above
+       
+   Code:
+  
+  https://github.com/sgarg5858/Angular/blob/master/TemplateDrivenForm.html
+   
+   
+*********************************************************************************************************************
+# Reactive Forms!
+
+1. Instead of FormsModule for reactive forms we need ReactiveFormsModule.
+
+2. Instead of ngForm in .ts file here data type will be FormGroup because internally ngForm points to FormGroup and Form is nothing 
+
+   but group of controls.
+   
+3. Now for connecting the template to component to make forms reactive and getting them in sync.
+
+   a) In ngOnInit()  we will initialize th FormGroup we defined.
+   
+   https://github.com/sgarg5858/Angular/blob/master/ReactiveForms
+   
