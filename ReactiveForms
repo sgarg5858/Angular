@@ -1,0 +1,117 @@
+1. First Declare a FormGroup in .ts file
+
+signUpForm:FormGroup;
+
+2. Initialize it before we render our template ngOnInit is good place to do it.
+
+ngOnInit()
+  {
+    this.signUpForm= new FormGroup({
+      'username': new FormControl(null),
+      'email' : new FormControl(null),
+      'gender' : new FormControl('male')
+    });
+  }
+  
+3. Now we have inform the <form> in template that we have created our own form-group don't create another one.
+
+ <form [formGroup]="signUpForm">  formGroup directive!
+ 
+ now both template form and typescript form both are in sync. But we still need to tell angular which form controls should be connected
+ 
+ to which inputs in the template code.
+ 
+ 4. For this we have to use formControlName this tells form what is the name of this input in typescript form.
+ 
+ 5. Submitting the form.
+
+    <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+    
+ 6. Adding Validations
+ 
+  ngOnInit()
+  {
+    this.signUpForm= new FormGroup({
+      'username': new FormControl(null,Validators.required),
+      'email' : new FormControl(null,[Validators.required,Validators.email]),
+      'gender' : new FormControl('male',[Validators.required])
+    });
+  }
+  
+ 7. Getting Access to Controls:
+ 
+ <span class="text-danger" *ngIf="!signUpForm.get('username').valid && signUpForm.get('username').touched">
+          Please enter a valid username!</span>
+          
+ 8. Custom Validators
+ 
+ 
+export class signUpValidator{
+
+    static ageValidator(control:FormControl):{[key:string]:boolean}|null
+    {
+        if(control.value==null)
+        return null;
+        if(control.value<1 || control.value >100)
+        return {'invalidAge':true};
+        else
+        return null;   if no error we must return null.
+    }
+}
+
+'age' :new FormControl(null,[Validators.required, signUpValidator.ageValidator]),
+
+  <div class="form-group">
+          <label for="age">Age</label>
+          <input 
+                type="number" 
+                id="age"
+                class="form-control"
+                formControlName="age"
+          >
+        <span class="text-muted" *ngIf="!signUpForm.get('age').valid && signUpForm.get('age').touched">
+         
+          <span *ngIf="signUpForm.get('age').errors['invalidAge']"> Age should be greater than 0</span>
+          <span *ngIf="signUpForm.get('age').errors['required']">  Please enter Age!</span>
+        </span>
+        </div>
+        
+ 
+9. Asynchronous Validator:
+
+  Earlier we created own validator, but sometimes we might have to go server or backend for logic to check whether an email is already
+  
+  registered or not? That is asynchronous operation becuase response is not coming back instantly.
+  
+  
+  1.
+  
+   static emailValidator(control:FormControl): Promise<any>| Observable<any>
+    {
+        const promise = new Promise<any>((resolve,reject) =>{
+            setTimeout(()=>{
+                if(control.value==="sgarg5858@gmail.com")
+                {
+                     resolve({alreadyRegistered:true});
+                }
+                else
+                {
+                    resolve(null);
+                }
+            },1500);
+        })
+
+        return promise;
+    }
+    
+  2.  .ts file
+  
+   'email' : new FormControl(null,[Validators.required,Validators.email],signUpValidator.emailValidator),
+   
+   3. .html file
+   
+     <span class="text-muted" *ngIf="!signUpForm.get('email').valid && signUpForm.get('email').touched">
+            <span *ngIf="signUpForm.get('email').errors['alreadyRegistered']">This Email is already Registered</span>
+            <span *ngIf="signUpForm.get('email').errors['required']">Please Enter Valid Email</span>
+          </span>
+
