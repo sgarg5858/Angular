@@ -1,0 +1,18 @@
+1. How Authentication Works?
+
+a) We can't use sessions because RestFul a nd GraphQL API's both are stateless.ThereFore Client and Server aredecoupled from each other.
+
+b) Session would be stored on the server and server doesnot care about client.Thus Session is no solution.
+
+c) Instead we will use different approach where server will validate the user email and password and if all that data is valid.the server will
+
+send client a token, a JSON Web Token Typically.That is an encoded string which contains a lot of meta data, which means string could be
+
+unpacked and can be read by client.
+
+d) Moreover, the token is generated on server with certain algorithm and a certain secret which only the server knows and only the server 
+
+can validate incoming tokens for their validity. because the idea is that client(our Angular app) will store the token is some storage
+
+(local storage of browser) and attaches the token to any request that there after is sent to the server which needs to be authenticated
+
