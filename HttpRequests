@@ -1,0 +1,166 @@
+1. First add HttpClientModule
+
+import {HttpClientModule} from '@angular/common/http';
+
+2. Inject into component or service from where you want to make th call.
+
+constructor(private http:HttpClient) { }
+
+3. POST request:
+
+  verifyUser(login:Login)
+  {
+    const httpOptions={
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+  
+    this.http.post('http://localhost:2001/verifyUser',login,httpOptions).
+    subscribe(responseData =>{
+      console.log(responseData);
+    })
+  }
+  
+}
+
+4. Splitting the code from only component to service and component. By returning observable we can subscribe it in component.
+
+In service file
+
+fetchPosts()
+  {
+   return this.http.get<{ [key : string] :Post}>('https://angular-backend-1ae77.firebaseio.com/posts.json')
+    .pipe(
+      map(responseData   =>{
+        const postArray: Post[] = [];
+        for (const key in responseData)
+        {
+          if(responseData.hasOwnProperty(key))
+          {
+            postArray.push({...responseData[key],id:key})
+          }
+         
+        }
+        return postArray;
+    })
+    );
+  }
+  
+  In Component File.
+  
+   onFetchPosts() {
+    // Send Http request
+    this.isFetching=true;
+    this.postService.fetchPosts().subscribe(posts=>{
+      this.isFetching=false;
+      this.loadedPosts=posts;
+      
+    });
+  }
+  
+  5. Delete Request  subscribt to it in component.
+  
+   return this.http.delete('https://angular-backend-1ae77.firebaseio.com/posts.json');
+   
+  6. Error Handling:
+  
+  a) here in service class we will return  observable and subscribe it in component.
+  
+  We studied in Observables part that second argument to subscribe is error handling, first is data recieved.
+  
+  component file:
+  
+  {
+    this.isFetching=true;
+    this.postService.fetchPosts().subscribe(posts=>{
+      this.isFetching=false;
+      this.loadedPosts=posts;  
+    },error=>{
+      this.error=error.message;
+    }
+    );
+    
+  b) When we subscribe in Service then how to manage in component we will use subject.
+  
+  service class
+  
+  errorInCreate =new Subject<string>();
+
+  constructor(private http: HttpClient) { }
+  createAndStorePost(postData:Post)
+  {
+    this.http.post<{name:string}>('https://angular-backend-1ae77.firebaseio.com/posts.json',
+    postData)
+    .subscribe(
+      responseData=>{
+        console.log(responseData);
+      }
+      ,
+      error =>{
+        this.errorInCreate.next(error.message);
+      }
+    )
+    ;
+  }
+  
+  component class
+
+  ngOnInit() {
+
+    this.onCreateSubscription=this.postService.errorInCreate.subscribe(
+      errorMessage=>{
+        this.error=errorMessage;
+      }
+    )
+}
+
+ ngOnDestroy()
+  {
+    this.onCreateSubscription.unsubscribe();
+  }
+  
+  7.    Catch Error
+  
+  catchError(errorResponse=>{
+      return throwError(errorResponse);
+    })
+    
+ 8. Setting Headers
+ 
+  verifyUser(login:Login)
+  {
+    const httpOptions={
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+  
+    this.http.post('http://localhost:2001/verifyUser',login,httpOptions).
+    subscribe(responseData =>{
+      console.log(responseData);
+    })
+  }
+  
+  9. Adding Query Parameters:
+  
+  this.http.post<{name:string}>
+    ('https://angular-backend-1ae77.firebaseio.com/posts.json',
+    postData,
+    {
+      params:new HttpParams().set('id','4')
+    }
+    )
+    
+  10 .Getting different type of responses from http request  
+  
+   this.http.post<{name:string}>
+    ('https://angular-backend-1ae77.firebaseio.com/posts.json',
+    postData,
+    {
+      //default body means extracted response. 'response gives us full HttpResponse
+      // observe:'body'
+      observe:'response',
+      responseType: 'json'
+    }
+    )
