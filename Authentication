@@ -14,5 +14,25 @@ d) Moreover, the token is generated on server with certain algorithm and a certa
 
 can validate incoming tokens for their validity. because the idea is that client(our Angular app) will store the token is some storage
 
-(local storage of browser) and attaches the token to any request that there after is sent to the server which needs to be authenticated
+(local storage of browser) and attaches the token to any request that there after is sent to the server which needs to be authenticated.
+
+e) Say user want to post a new post after successfull logging in.Then we have send the token in header or as query parameter.
+
+f)Server is able to validate the token because server created the token with certain alogrithm and a private key.which is only known 
+
+to server.that is how token is secured. We cant change or edit the token on the client because as soon as we do that, I t will not fit the
+
+algorithm and private key used on the server, there for server is able to detect th token is invalid or not if invalid then it will block 
+
+the access.
+
+We will use Jwt Authentication?
+
+Token consists of three parts header.payload.signature.
+
+1)Header  has 2 parts type of token and hashing algorithm used.The JSON structure comprising these two keys are Base64Encoded.
+
+2)Payload contains the claims.Primarily, there are three types of claims: 
+
+3)Signature ensures that the token is not changed on the way.
 
