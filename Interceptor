@@ -1,0 +1,120 @@
+If we want to add custom header to every ongoing request we can highly use interceptors.
+
+1.When we add JWT token security to our app then for every request we have to pass token in the header of our request so that server can
+
+authenticate the request.And the token will be same for all for requests for one user.
+
+2. As you have to add this token to every outgoing request doing it for all requests is duplication and time consuming and and for that 
+
+you can use interceptors,Interceptor will run before your request leaves your angular app.
+
+app.module.ts
+
+ providers: [{provide:HTTP_INTERCEPTORS,useClass:AuthInterceptorService,multi:true}
+ 
+ first is like token for angular to specify in every class where we want to add this service and multi is for don't override others.
+ 
+ 
+export class AuthInterceptorService implements HttpInterceptor{
+    
+    intercept(req: HttpRequest<any>,next:HttpHandler)
+    {
+        console.log("Request is on its way");
+        // next is imp it allows the request to continue its journey.
+        // its a must otherwise our app will be broken.
+        return next.handle(req);
+    }
+    
+}
+
+3. Manipulating Request Parameters: header,url etc...
+
+  
+    intercept(req: HttpRequest<any>,next:HttpHandler)
+    {
+        console.log("Request is on its way");
+        console.log(req.url);
+        const modifiedRequest=req.clone({headers:req.headers.append('Auth','xyz')});
+        // next is imp it allows the request to continue its journey.
+        // its a must otherwise our app will be broken.
+        return next.handle(modifiedRequest);
+    }
+
+4. Playing with Response !
+
+ intercept(req: HttpRequest<any>,next:HttpHandler)
+    {
+        console.log("Request is on its way");
+        console.log(req.url);
+        const modifiedRequest=req.clone(
+            {headers:req.headers.append('Auth','xyz')}
+            );
+        // next is imp it allows the request to continue its journey.
+        // its a must otherwise our app will be broken.
+        //handle gives you observable.
+        return next.handle(modifiedRequest)
+        .pipe(tap(event=>
+            {
+                if(event.type===HttpEventType.Response)
+                {
+                    console.log("response arrived");
+                    console.log(event.body);
+                }
+            }))
+    };
+    
+ 5. Mutiple Interceptors.
+ 
+ The order matters in which we specify the interceptors in app.module.ts first mentioned get executed first.
+ 
+ providers: [
+    {provide:HTTP_INTERCEPTORS,
+      useClass:AuthInterceptorService
+      ,multi:true},
+      
+      {provide:HTTP_INTERCEPTORS,
+        useClass:LoggingInterceptorService
+        ,multi:true}
+  ]
+
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEventType } from '@angular/common/http';
+import { map, tap } from 'rxjs/operators';
+
+export class AuthInterceptorService implements HttpInterceptor{
+    
+    intercept(req: HttpRequest<any>,next:HttpHandler)
+    {
+        // console.log("Request is on its way");
+        // console.log(req.url);
+        const modifiedRequest=req.clone(
+            {headers:req.headers.append('Auth','xyz')}
+            );
+        // next is imp it allows the request to continue its journey.
+        // its a must otherwise our app will be broken.
+        //handle gives you observable.
+        return next.handle(modifiedRequest)
+    };
+    
+}
+
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEventType } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+
+export class LoggingInterceptorService implements HttpInterceptor{
+
+    intercept(req:HttpRequest<any>,next:HttpHandler)
+    {
+        console.log("Outgoing Request");
+        console.log(req.url);
+        console.log(req.headers);
+        return next.handle(req)
+        .pipe(tap(event=>
+            {
+                if(event.type===HttpEventType.Response)
+                {
+                    console.log("response arrived");
+                    console.log(event.body);
+                }
+            }))
+    };
+    }
