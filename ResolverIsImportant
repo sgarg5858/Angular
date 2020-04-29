@@ -1,0 +1,56 @@
+A Resolver is a class that implements the Resolve interface of Angular Router. 
+In fact, Resolver is a service that has to be [provided] in the root module. 
+Basically, a Resolver acts like middleware, which can be executed before a component is loaded.
+
+If we want to do something before the component loads then resolver is best to use.
+when we were reloading recipes detail component, we were getting error,because data is on the server and our code tries to fetch data
+which is not available yet therefore we get error.
+Here resolver comes into play we load data before the component is loaded.
+
+
+import { Injectable } from '@angular/core';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Recipe } from './recipe.model';
+import { DataStorageService } from '../shared/data-storage.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class RecipesResolverService implements Resolve<Recipe[]> {
+
+  constructor(private dataStorageService:DataStorageService) { }
+
+  resolve(route:ActivatedRouteSnapshot,state:RouterStateSnapshot)
+  {
+    return this.dataStorageService.fetchRecipes();
+  }
+}
+
+app-routing.mdoule.ts
+   {path:':id' ,component : RecipesDetailComponent,resolve:[RecipesResolverService] },
+   
+   
+The Drawback of above aproach  is if we make any changes locally to details component.and it will reload all the recipies from server
+therefore changes will be lost. so solution is if we already have recipes then we don't call server.
+
+export class RecipesResolverService implements Resolve<Recipe[]> {
+
+  constructor(private dataStorageService:DataStorageService,private recipeService:RecipeService
+    
+    ) { }
+
+  resolve(route:ActivatedRouteSnapshot,state:RouterStateSnapshot)
+  {
+    var recipes=this.recipeService.getRecipes();
+    if(recipes.length===0)
+    {    
+      return this.dataStorageService.fetchRecipes();
+    }
+   else
+    {
+      return recipes;
+    }
+  }
+}
+
+   
