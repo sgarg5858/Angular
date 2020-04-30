@@ -36,3 +36,194 @@ Token consists of three parts header.payload.signature.
 
 3)Signature ensures that the token is not changed on the way.
 
+Authentication using Firebase
+
+1. SignUp with Firebase:
+
+https://firebase.google.com/docs/reference/rest/auth#section-create-email-password
+
+2. do SignIn
+
+3. Navigate when logged in or sign up is successfull.
+
+4. Now we have to disable authenticaon in header when user is logged in and only enable recipes and manage once user is logged in.
+
+5. Add logout and only enable once user is logged in.
+
+5.  BehavioralSubject
+
+This subject gives immediate access to all subscribers to the previously emitted values even if they haven't subscribed at that point of
+time.It should be initialixed with value.
+
+6. Sending Token in Firebase
+
+Others might take in header but firebase takes in query parameter.
+
+7. Using Interceptor for attaching token to all ongoing requests not for login/signup requests.
+
+8.how to persist toke in local memory of browser so that when app reloads token stays there.
+
+@Adding Auto-Login
+
+How to do it currently we are storing our token or user data in javascript model.When we reload the app everything flushes down.
+
+so we have to store this data in a persistent storage, that survives page reloads and browser restarts.
+
+We have got different storages in browsers we cannot access file system but we can work with local storage or cookies.
+which is an api exposed by browser to simply store key value pairs.
+
+authService
+
+
+ authenicatedUser= new BehaviorSubject<User>(null);
+ 
+ login(email:string,password:string)
+  {
+    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCHYicFeQqYSG_gM0QW-cD3v5rTI_htPBk'
+    ,{
+      email:email,
+      password:password,
+      returnSecureToken:true
+    }
+    ).pipe(catchError(this.handleError),
+    tap(responseData=>
+      {
+        this.handleAuthentication(
+          responseData.email,
+          responseData.localId,
+          responseData.idToken,
+          +responseData.expiresIn
+          );
+      })
+    );
+  }
+
+private handleAuthentication(email:string,localId:string,idToken:string,expiresIn:number)
+  {
+    const expirationDate=new Date(new Date().getTime()+ +expiresIn*1000);
+    
+    const user=new User(email,localId,idToken,expirationDate);
+        
+    this.authenicatedUser.next(user);
+
+    localStorage.setItem('authenticatedUserData',JSON.stringify(user));
+  }
+  
+  Before we were only emitting data in application using behaviorsubject now we are also storing in local storage of browser.
+  for confirming go to console application local storage.
+  
+  Now we have to load this in our application when we restart browser of reload application.
+  how?
+  
+  Adding AutoLoginFunction in AuthService...
+  
+   autoLogin()
+  {
+    //synchronous method.
+    const user:{
+      email:string,
+      id:string,
+      _token:string,
+      _tokenExpirationDate:string
+      }  = JSON.parse(localStorage.getItem('authenticatedUserData'));
+
+    if(!user)
+    return;
+
+    const loadedUser=new User(
+      user.email,
+      user.id,
+      user._token,
+      new Date(user._tokenExpirationDate));
+     
+    if(loadedUser.token)  
+    {
+      this.authenicatedUser.next(loadedUser);
+    }
+  }
+  
+  Now we have to call this method when app just starts ,for that what's better than ngOnInit method of app.component.ts
+  
+  constructor(private authService:AuthService){}
+  
+ngOnInit()
+  {
+    this.authService.autoLogin();
+  }
+  
+  we also have to clear our local storage when logging out so update logout.
+  
+   logout()
+  {
+    this.authenicatedUser.next(null);
+    this.router.navigate(["/auth"]);
+    localStorage.removeItem('authenticatedUserData');
+  }
+
+  
+  9. Adding @Auto-Logout:
+  
+  when token expires for user then user should automatically logout. We can set timer for this.and call logout.
+  
+   autoLogout(expirationDuration:number)
+  {
+    this.tokenExpirationTimer=setTimeout(()=>{
+      this.logout();
+    },expirationDuration);
+  }
+  
+  when should we start timer ... whenever user logs in handle Authentication and AutoLogin  we have to compute timer in auto login.
+  
+   private handleAuthentication(email:string,localId:string,idToken:string,expiresIn:number)
+  {
+    const expirationDate=new Date(new Date().getTime()+ +expiresIn*1000);
+    
+    const user=new User(email,localId,idToken,expirationDate);
+        
+    this.authenicatedUser.next(user);
+
+    this.autoLogout(expiresIn*1000);
+
+    localStorage.setItem('authenticatedUserData',JSON.stringify(user));
+  }
+
+in AutoLogin
+
+if(loadedUser.token)  
+    {
+      this.authenicatedUser.next(loadedUser);
+
+      const expirationDurationLeft=new Date(user._tokenExpirationDate).getTime()-new Date().getTime();
+      this.autoLogout(expirationDurationLeft);
+    }
+ 
+
+10. Adding an AuthGuard:
+
+Why AuthGuard ? as users who are not authenticated can still visit /recipes to prevent that...
+
+A route guard allows to run logic before route is loaded and we can prevent access.
+
+
+export class AuthGuard implements CanActivate{
+
+    constructor(private authService:AuthService,private router:Router){};
+
+    canActivate(route:ActivatedRouteSnapshot,state:RouterStateSnapshot)
+
+    : boolean| Promise<boolean>| Observable<boolean| UrlTree>
+    {
+       return this.authService.authenicatedUser.pipe(
+           (take(1),
+           map(user =>{
+               if(user==null)
+               {
+                   return this.router.createUrlTree(['/auth']);
+               }
+               return true;
+           })))};
+}
+
+Add this i sapp-routing.module.ts file...
+
+ {path:'recipes' , component : RecipesComponent ,canActivate:[AuthGuard]}
