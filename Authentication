@@ -50,9 +50,12 @@ https://firebase.google.com/docs/reference/rest/auth#section-create-email-passwo
 
 5. Add logout and only enable once user is logged in.
 
-5.  BehavioralSubject
+5. BehavioralSubject  video 299  we used this in when sending requests by adding token and we only need token value when we want to fetch 
+
+data,therefore we can use BehavioralSubject So that we can get access to previously emitted value.
 
 This subject gives immediate access to all subscribers to the previously emitted values even if they haven't subscribed at that point of
+
 time.It should be initialixed with value.
 
 6. Sending Token in Firebase
