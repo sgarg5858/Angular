@@ -1,0 +1,66 @@
+What are modules?
+
+Angular modules are in the end are ways of bundling angular building blocks together,
+that would be components directives,services and pipes.You have to group all that together into such angular modules so that angular is 
+aware of these features,because angular doesn't automatically scan all the files in your app.
+
+It doesn't search all your code and automatically detect all your components and directives instead you need to tell angular what are 
+components and in the end you have to bundle them into modules.
+
+Every Angular needs to have atleast one module,AppModule.
+
+Angular analyzes NgModule to understand your application and its features.
+
+Angular module defines all your building blocks.
+
+Angular app requires atleast one module (AppModule) but can be split into multiple modules.
+
+Core Angular Features are added in Angular modules to load them only when needed.
+
+You can't use a feature building block without including it in a module.
+
+We are already use two modules one app.module.ts and app-routing.module.ts
+
+We use imports array in app.module.ts to define mutliple angular modules which are being used in our app,so it basically helps us with
+
+splitting app into multiple modules.
+
+entryComponents in app.module.ts contains module which we create programmatically.
+
+Imp->  Every moduke in angular works on their own they don't communicate with each other.there we export Routing Module in 
+app-routing.module.ts and import in AppRoutingModule in app.module.ts so that we can use routes in app module.
+
+
+Splitting App into Smaller Modules:
+
+Instead of having big app module we can split  that into an app in which app moduke defines our App comonent and then into feature modules.
+
+As splitting your app into feature modules is a prerequisite to performance improvements.
+
+Create a new module inrecipes folder  ng generate module recipes
+
+remove all the RecipeComponents from app component and add all the decalarations in recipeModule and also in export of recipeModule
+so that we can import Recipe module in imports of App module we can use it there.
+
+imports array in ngModule is for injecting other feature ngModules into this one.
+
+Whatever we are using in templates under module that has to be imported importing slone in app.module.ts is not sufficient.
+Services are an exception here we will come to them later.
+
+Now we have made two modules one app and other recipe module we only Recipe Routes In Recipes module so we can avoid exporting them.
+
+
+Shared Modules:
+
+We can make shared modules and we know these are shared accross therefore we can import it in multiple modules to avoid code duplication
+We can't declare one component in more than one module.
+
+Core Module: for moving services out of app.module.ts in providers if any specified we prefer services in root level,but for interceptors
+we can have this core module no need to export
+
+CoreModule is make App component and app module more leaner we can move services here which inturn is added back to App module.
+We don't need to export services.they are available at root level application wide.
+
+
+
+
