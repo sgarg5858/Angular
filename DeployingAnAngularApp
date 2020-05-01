@@ -1,0 +1,27 @@
+1. Deployment Preparation:
+  
+  i)Use and Check Environment Variables
+  
+  ii)Polish and test code.
+  
+  iii) ng build --prod  uses ahead of time completion
+  
+  iv) deploy these build artifacts to a static host. Static host is only capable of handling html,css,javascript.not backend like node/java
+  
+2. Use Environment variables.
+
+  i) We have two files in src->environments environment.ts and environment.prod.ts
+  
+  ii) environment.ts is used during devlopment and environment.prod.ts is used during production.
+  
+  iii) both these files are swapped automatically.
+  
+  iv) Add environment variables in files only import environment.ts and copy all the key:values also in environment.prod.ts and during prod
+  
+      these files will be automatically swapped.
+  
+3. Firebase Hosting
+
+ng install -g firebase-tools
+firebase login
+firebase init hosting use existing project
