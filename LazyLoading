@@ -1,0 +1,46 @@
+Splitting App into proper modules is a prerequisite for Performance and Optimization.
+
+Now Moving on to Lazy Loading.....
+
+Now we have multiple modules for different routes.
+
+now at this moment whenever we visit any page we are loading everything,because we are not using lazy loading,
+
+Wouldn't it makes sense we only load the module when one of it's route is visited.
+
+How to enable Lazy Loading?
+
+ {path:'recipes' , component : RecipesComponent ,canActivate:[AuthGuard]}
+ 
+ change this to :
+ 
+  {path:'' , component : RecipesComponent ,canActivate:[AuthGuard],}
+  
+  and delete the import of recipe component from app.module.ts and from declarations as well and for lazy loading...
+  
+   {path:'recipes',loadChildren:'./recipes/recipes.module#RecipesModule'}
+   
+   
+Preloading Lazy-Loaded Code:
+
+The downside of above discussed approach is tiny delay in downloaded and parsed when we just need it.Therefore we can tell angular to
+preload lazy-loaded code to avoid this delay...
+
+Adding this  in app-routing.module.ts file will simply tell angular to preload all modules/bundles as soon as possible.
+ 
+imports: [RouterModule.forRoot(routes,{preloadingStrategy:PreloadAllModules})]
+
+The advantage is that initail downloading bundle is kept small and therefore intial loading phase is fast.When user is browsing and
+
+we have idle time we can load the bundles/modules...
+
+Now we know about lazy loading and we can finally dive into Services...
+
+We want to dive in where we can provide services. and how that affect the instances of services  you are working with..
+
+We can provide services in any eager loaded module...
+
+https://www.udemy.com/course/the-complete-guide-to-angular-2/learn/lecture/14466514#content
+
+
+ 
