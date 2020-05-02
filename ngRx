@@ -1,0 +1,57 @@
+Refreshing Problem in App
+
+1. First problem is refreshing our application, say we only have angular app and all our data is stored in there and we have made changes
+    
+    to data ,these changes will only last until we refresh our application.If we want to keep these changes then we have to use backend
+    
+    where we can store our changes so that when we reload our app we can reflect these changes in our app.
+    
+2. Application state -> Any Information that controls what should be visible on screen,that is state.
+
+We used Rxjs and Services approach for state management in our application but this approach has some flaws.It is always unclear 
+
+where to subscribe in component or service as no specific pattern is enforced.
+
+What is NgRx?
+
+What is Redux...
+
+1. Redux is a state managing pattern,Its also a library that helps you implement this pattern into any application.
+ 
+2. Idea behind managing state with redux is that you have one centeral store in your entire application that holds your application state.
+ 
+3. Your different parts of application like components and services, can still interact with each other,but they recieve their state
+ 
+ from central store.so that central store is single source of truth that manages your application state.
+ 
+4. Sometimes you need to change the state(when you add something new) for that you dispatch so called actions.
+
+   a) An action in the end is just a javascript with an identifier basically identifying the kind of action you want to perform and 
+   
+   optionally a payload.
+   
+   b) Now that action does not directly reach the store,instead it reaches the reducer.
+   
+   c) Now reducer is just a function which gets the current state which is in the store and action as an input passed automatically by
+   
+   redux library and then in the reducer you can have a look at the identifier,find out what kind of action it is(add,delete)
+   
+   and then perform code on the state which we got to update it in an immutable way.  
+   
+   d) Reducers return  new state then is forwarded to the application store
+   
+   e) we can use redux but ngrx is an implementation of redux as it contains things which are implemented in an angular way..
+   
+   like you can't send (asychronous only synchronous )http requests from reducers but ngrx provides solution...
+   
+
+   
+   
+ Reducers:
+ 
+1. Install npm install --save @ngrx/store
+
+2. Store and recipes are tightly coupled to each other.
+
+3. State changes with ngrx always have to be immutable.which means you must not edit the existing  or previous state,
+
