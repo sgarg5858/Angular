@@ -179,3 +179,25 @@ Programmatic.
     
     ** should be at last and it says if any of the routes have not matched  then redirect to the provided url.
     By default angular only matches prefixes . so pathMatch:'full'
+
+
+14. paramMap  Advantage-> we can use has.... to check if parameter exists or not?
+
+1. define route
+{path:'edit/:postId' , component: PostCreateComponent}
+
+ this.currentRoute.paramMap.subscribe((paramMap:Params)=>{
+      if(paramMap.has('postId'))
+      {
+        console.log(true);
+        this.editMode=true,
+        this.postId=paramMap.get('postId');
+        this.newPost=this.postService.getPost(this.postId);
+      }
+      else
+      {
+        console.log(false);
+        this.editMode=false,
+        this.postId=null;
+      }
+    })
