@@ -211,7 +211,7 @@ now we are storing token in browser and if we reload our app then token is gone 
 logout feature, auto login/logout feature... And when user logs in it should navigate to main page...
 
 ************************************************************************************************************************
-Adding Logout:
+8. Adding Logout:
 
 Firstly we add (click) listener to  anchor tag or button whichs holds logout in template then in component
 
@@ -239,3 +239,31 @@ changes even when browser reloads. And user can still access our routes which sh
 So we have to redirect to another route when we access that route and for this we will use AuthGuard....
 
 ***************************************************************************************************************************
+9. AuthGuard...
+
+{path:'feed' , component: PostListComponent,canActivate:[AuthGuard]},
+
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTree } from '@angular/router';
+import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+
+@Injectable({
+    providedIn:'root'
+})
+export class AuthGuard implements CanActivate{
+    
+    constructor(private authService:AuthService,private router:Router){}
+
+    canActivate(route:ActivatedRouteSnapshot,state:RouterStateSnapshot)
+    : boolean| Promise<boolean>| Observable<boolean| UrlTree>
+    {
+        // if we return true here or any observable which eventually returns true then
+        // router will know this route is accessible. otherwise not accessible.
+        const isAuth=this.authService.getAuthenticationStatus();
+        if(isAuth)
+        return true;
+        else
+        this.router.navigate(['/login']);
+    }
+}
