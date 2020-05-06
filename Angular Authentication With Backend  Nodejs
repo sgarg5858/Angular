@@ -133,3 +133,109 @@ router.post("/login", (req, res, next) => {
 
 It will just log the response soon we will store this information(token) for authenticated users in browser.
 
+*****************************************************************************************************************************
+6. Now we want to protect the services/routes on the backend and routes should only be accessible if request header has token...
+   but we want to provide some services without token like login and signup...
+   
+   For this we have to add a new middleware which can check if the http request has valid token or not...
+   
+   1. First we have token or not if we have  then it is valid or not...
+   We can use .sign method to check if token is valid or not....
+   
+   This middleware will check the json token... and verify it we have to use this middleware where we want to protect
+   
+   const jwt = require("jsonwebtoken");
+
+module.exports= (req,res,next) =>{
+
+    try{ 
+    const token=req.headers.authorization.split(" ")[1];
+    // we used this string while signing the token so for verifying
+    //verify method also throws an error so if authentication fails then throw which is catched by catch block..
+    jwt.verify(token,"secret_this_should_be_longer");
+    //if authenticated then request should continue... so call next()
+    next();
+    }catch(error){
+        res.status(401).json({
+            message:"Auth Failed"
+        })
+    }
+
+}
+
+
+Using Above MiddleWare....
+
+const checkToken=require('../AuthenticationMiddleware/check-auth');
+
+ //delete
+  router.delete("/:id",
+  checkToken,                     //here we added this middleware for authentication....
+  (req, res, next) => {
+    Post.deleteOne({ _id: req.params.id }).then(result => {
+      console.log(result);
+      res.status(200).json({ message: "Post deleted!" });
+    });
+  });
+  
+  
+  ****************************************************************************************************************
+7.  Now adding Token in requests in frontend after user has validated....Interceptor
+
+import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor{
+
+    constructor(private authService:AuthService){}
+
+
+    intercept(request:HttpRequest<any>,next:HttpHandler){
+        const authToken=this.authService.getToken();
+        if(authToken==null)
+        {
+            return next.handle(request);
+        }
+
+        var modifiedRequest=request.clone({
+            headers: request.headers.set("Authorization","Bearer " +authToken)
+        });
+        return next.handle(modifiedRequest);
+       
+    }
+}
+
+now we are storing token in browser and if we reload our app then token is gone soon we will use local storage for that and also add 
+
+logout feature, auto login/logout feature... And when user logs in it should navigate to main page...
+
+************************************************************************************************************************
+Adding Logout:
+
+Firstly we add (click) listener to  anchor tag or button whichs holds logout in template then in component
+
+onLogout()
+  {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+  
+  Then Service   
+  
+   logout()
+  {
+    this.token=null;
+    this.isuserAuthenticated=false;
+    this.AuthStatus.next(this.isuserAuthenticated);
+  }
+  
+The authentication we have build till now will only work till browser is not reloaded... as when we will reload the browser we will
+
+start new instance of angular app and kickout the previous instance so all data will be lost so we have to find a way to keep this 
+
+changes even when browser reloads. And user can still access our routes which should only be available to users who are authenticated.
+
+So we have to redirect to another route when we access that route and for this we will use AuthGuard....
+
+***************************************************************************************************************************
