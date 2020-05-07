@@ -1,0 +1,73 @@
+Connecting Users and Posts!
+
+we don't want that user can edit or delete every post! users should only edit or delete post created by them...
+
+For this process we either add list of posts in user object or we can add id of user to every post...
+
+Backend PostSchema  
+
+const postSchema=mongoose.Schema({
+    title:{type:String,require:true},
+    caption:{type:String,require:true},
+    creator:{type: mongoose.Schema.Types.ObjectId , ref:"User" ,required:true}
+
+})
+
+ref tells mongoose to which model this creator id refers 
+
+Now the question is how are going to get this creator id when creating posts.Remember when we were creating token in login and signup
+we were using user _id from the database for creating token and this token can be decoded..so we will decode the token...to get user id.
+
+userId: fetchedUser._id 
+
+const token = jwt.sign(
+          { email: fetchedUser.email, userId: fetchedUser._id },
+          "secret_this_should_be_longer",
+          { expiresIn: "1h" }
+        );
+        
+Now we will decode the token remember we added middleware for verifying token using verify method.verify method actually decodes the
+token
+
+const jwt = require("jsonwebtoken");
+
+module.exports= (req,res,next) =>{
+
+    try{ 
+    const token=req.headers.authorization.split(" ")[1];
+    // we used this string while signing the token so for verifying
+    //verify method also throws an error so if authentication fails then throw which is catched by catch block..
+    const decodedToken=jwt.verify(token,"secret_this_should_be_longer");
+    //if authenticated then request should continue... so call next()
+    
+    req.userData={email: decodedToken.email, userId: decodedToken.userId};
+    
+    next();
+    }catch(error){
+        res.status(401).json({message:"Auth Failed"})
+    }
+
+}
+Now how to transfer this decoded token to posts ass this is middleware runs before in express js we can easily add add data to
+req and it will take data forward using next..
+        
+
+router.post("", checkToken,
+(req, res, next) => {
+ 
+    const post = new Post({
+      title : req.body.title,
+      caption : req.body.caption,
+      creator : req.userData.userId                                  //see here
+      
+    });
+    post.save().then(createdPost=>{
+      res.status(201).json({
+          message: "Post added successfully",
+          postId:createdPost._id
+        });
+    });
+  });
+  
+ **********************************************************************************************************************
+ Now we can use this id for creating myposts component and show only these edit and delete buttons only in myposts component.
