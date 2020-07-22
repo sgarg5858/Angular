@@ -1,0 +1,27 @@
+we know how property binding works like we can provide the value to html element from typescript file.
+
+app.html
+
+<img [src]="path">
+
+app.ts
+
+path="your path to img"
+
+This is property binding. Now we want to transfer data from parent to child component if we look closely above we are doing the same 
+say app is parent and img is child and we are passing path to [src].
+
+app.html
+
+ <app-server-element 
+      *ngFor="let serverElement of serverElements"
+      [element]="serverElement"
+      ></app-server-element>
+      
+ server-element.html
+ 
+ @Input() element;
+ 
+ Now lets understand above , Instead of img we have our component here we have to bind to custom property of this component.
+ By default component properties are not bindable or accessible outside component .For that we have @Input() decorator.It makes the property bindable from outside.
+ Think of it like we are getting an input from parent.
